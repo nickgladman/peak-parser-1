@@ -26,7 +26,7 @@ class Bedfile(object):
 					chromosome =  self.chromosomes[chr_name] #chromosome_name is associated with the chromosome value, which in the else statement below we turn into a Chromosome object list
 				else:
 					chromosome = Chromosome(name=chr_name) # we creating a new object in our dictionary, chromosome, and that object is of the Class Chromosome and its name is chr_name
-					self.chromosomes[chr_name.lower] = chromosome
+					self.chromosomes[chr_name.lower()] = chromosome
 
 				# create new peak from row
 				new_peak = Peak() #create new object with Peak class method
@@ -87,7 +87,7 @@ class Gff_file(object):
 					chromosome =  self.chromosomes[chr_name] #add chromosome name as a key, this will NOT replace the values already associated with an existing identical key. Else will turn chromosome into a Chromosome object
 				else:
 					chromosome = Chromosome(name=chr_name) #creates Chromosome object with key name as the chromosome name
-					self.chromosomes[chr_name] = chromosome #fills the dictionary with the Chromosome object.
+					self.chromosomes[chr_name.lower()] = chromosome #fills the dictionary with the Chromosome object.
 				#get line only if it is a gene
 				if "gene" == fields[2]:
 					gene = Gene() #set new class so we can attribute properties.
@@ -122,8 +122,9 @@ class DE_genes(object):
 		self.expression_values_dict = dict()
 		self.filepath=path
 	
-		with open(path) as defile:
-			for line in defile:
+		with open(path) as de_file:
+# 			assert len(de_file) > 0, "file is empty"
+			for line in de_file:
 				line = line.rstrip()
 				fields = line.split('\t')
 				gene_n = re.split("_",fields[2])
@@ -137,12 +138,13 @@ class DE_genes(object):
 
 				gene = DEexpression()
 				gene.cluster = fields[0]
-				gene.ID = gene_name
-				gene.foldchange = fields[3:len(fields)-1]
+				gene.ID = gene_name.upper()
+				gene.foldchange = (fields[3:len(fields)-1]) ##fix this: need to convert values in expression to float here
 				gene.annotation = fields[-1]
 			
 				chromosome.degenes.append(gene)
-	
+# 	def __repr__(self): #Default override. unix returns the print function from this. If we define it here, then it won't return the default object location
+# 		return "<Gene{0}\t{1}-{2}>".format(self.ID, self.end)
 			
 class DEexpression(object):
 	def __init__(self):
@@ -152,6 +154,8 @@ class DEexpression(object):
 		self.foldchange = None
 		self.annotation = None
 	
+	def __repr__(self): #Default override. unix returns the print function from this. If we define it here, then it won't return the default object location
+		return "<Gene{0}\t{1}-{2}>".format(self.ID, self.foldchange)
 	
 	
 	
