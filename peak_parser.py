@@ -17,7 +17,6 @@ class Bedfile(object):
 		with open(path) as bedfile:
 			for line in bedfile:
 				line = line.rstrip()
-				
 				fields = line.split("\t")
 				chr_name = fields[0]
 

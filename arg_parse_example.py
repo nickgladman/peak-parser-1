@@ -58,7 +58,8 @@ de_genes_list = de_file.expression_values_dict["gene"]
 for gene in de_genes_list.degenes:
 # 	print(gene.ID, type(gene.ID))
 	if gene.ID in genes_for_comparison:
-		print(gene.ID, "\t", gene.foldchange)
+		print(gene.ID,gene.foldchange,sep=",")
+
 	
 	
 	
